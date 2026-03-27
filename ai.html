@@ -99,6 +99,149 @@
             filter: grayscale(0%);
         }
 
+        /* MOBILE RESPONSIVE IMPROVEMENTS */
+        @media (max-width: 768px) {
+            /* Typography scaling for mobile */
+            body { --chat-text-size: 14px; }
+            
+            /* Header optimization */
+            header { h-16 !important; px-3 !important; }
+            
+            /* Chat container padding - account for mobile keyboard */
+            #chat-container { 
+                px-3 !important; 
+                pt-20 !important; 
+                pb-40 !important; /* Extra padding for keyboard */
+                gap-4 !important; 
+            }
+            
+            /* Message bubbles */
+            .msg-enter, .msg-enter-user {
+                margin-bottom: 0.75rem !important;
+                padding: 0.75rem !important;
+                border-radius: 12px !important;
+            }
+            
+            /* Input area with safe area */
+            #chat-input {
+                font-size: 14px !important;
+                padding: 12px 8px !important;
+                max-height: 120px !important;
+            }
+            
+            /* Input section bottom positioning */
+            .absolute.bottom-6 { 
+                bottom: max(6px, env(safe-area-inset-bottom)) !important;
+                inset-x-3 !important; 
+            }
+            
+            /* Button sizing for touch */
+            button {
+                min-height: 44px !important; /* Touch-friendly size */
+                min-width: 44px !important;
+            }
+            
+            /* Settings panel - full screen on mobile */
+            .settings-panel {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding-bottom: max(24px, env(safe-area-inset-bottom)) !important;
+            }
+            
+            /* Hide desktop-only elements */
+            .hidden.md\:flex { display: none !important; }
+            .hidden.md\:block { display: none !important; }
+            .md\:hidden { display: block !important; }
+            
+            /* Tools menu mobile responsive */
+            #tools-menu {
+                width: calc(100vw - 24px) !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                max-width: 500px !important;
+            }
+            
+            /* Scroll button positioning */
+            #btn-scroll-down {
+                bottom: 140px !important;
+                right: 12px !important;
+            }
+            
+            /* Export dropdown alignment */
+            .absolute.right-0 { right: auto !important; left: 0 !important; }
+            
+            /* Statistics display mobile */
+            .flex-col.gap-3 { gap: 1.5rem !important; }
+        }
+
+        @media (max-width: 640px) {
+            /* Extra small screens */
+            body { font-size: 13px; }
+            
+            /* Tighter padding */
+            #chat-container { px-2 !important; }
+            
+            /* Smaller text in headers */
+            header { px-2 !important; }
+            
+            /* Compact buttons */
+            button.h-10 { height: 40px !important; width: 40px !important; }
+            button.px-4 { padding-left: 12px !important; padding-right: 12px !important; }
+            
+            /* Input bar adjustments */
+            .glass-panel.p-2 { padding: 8px !important; gap: 6px !important; }
+            
+            /* Textarea smaller on very small screens */
+            #chat-input { 
+                font-size: 13px !important;
+                padding: 10px 6px !important;
+                max-height: 100px !important;
+            }
+            
+            /* Icon text spacing */
+            button i { margin-right: 4px !important; }
+            
+            /* Reduce icon sizes on very small screens */
+            button i.text-lg { font-size: 16px !important; }
+            
+            /* Compact settings panel */
+            .settings-panel { p-4 !important; }
+            .glass-panel.p-4 { padding: 12px !important; }
+        }
+
+        /* Landscape mode adjustments */
+        @media (max-height: 500px) {
+            #chat-container { pb-32 !important; pt-16 !important; }
+            header { h-16 !important; }
+            .absolute.bottom-6 { bottom: 4px !important; }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            /* Larger touch targets */
+            button, input[type="checkbox"], select {
+                min-height: 48px !important;
+                min-width: 48px !important;
+            }
+            
+            /* Remove hover effects on touch devices */
+            button:hover { background-color: inherit !important; }
+            
+            /* Improve tap feedback */
+            button:active { opacity: 0.8; transform: scale(0.98); }
+            
+            /* Better textarea on mobile */
+            textarea { 
+                line-height: 1.5 !important;
+                letter-spacing: 0.3px;
+            }
+        }
+
+        /* Prevent zoom on input focus */
+        input, textarea, select {
+            font-size: 16px !important; /* iOS prevents auto-zoom when >= 16px */
+        }
+
         /* ZEN MODE STYLES */
         body.zen-mode aside { display: none !important; }
         body.zen-mode header { opacity: 0 !important; pointer-events: none; }
@@ -368,7 +511,7 @@
                         </button>
 
                         <!-- Dynamically floating above the chat input bar -->
-                        <div id="tools-menu" class="absolute bottom-[calc(100%+16px)] left-0 w-56 glass-panel border border-white/10 rounded-2xl overflow-hidden opacity-0 pointer-events-none smooth-transition shadow-2xl flex flex-col z-50 transform translate-y-2">
+                        <div id="tools-menu" class="absolute bottom-[calc(100%+16px)] left-0 md:w-56 w-screen md:w-56 glass-panel border border-white/10 rounded-2xl overflow-hidden opacity-0 pointer-events-none smooth-transition shadow-2xl flex flex-col max-h-[60vh] overflow-y-auto z-50 transform translate-y-2 md:rounded-2xl rounded-t-2xl md:left-0 left-1/2 md:translate-x-0 -translate-x-1/2">
                             <button onclick="toggleTool('webSearch', event)" id="tool-websearch" class="w-full text-left px-4 py-3 text-xs text-gray-300 hover:text-white hover:bg-white/10 smooth-transition flex items-center justify-between border-b border-white/5">
                                 <span class="flex items-center gap-2"><i class="fa-solid fa-globe text-blue-400 w-4 text-center"></i> Web Search</span>
                                 <i class="fa-solid fa-circle-check text-blue-400 opacity-0 tool-check smooth-transition scale-75"></i>
@@ -675,9 +818,10 @@
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const apiKey = "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"; // Not needed - backend handles auth
-        const TEXT_API_URL = `http://localhost:3000/api/chat`;
-        const IMAGE_API_URL = `http://localhost:3000/api/image`;
+        const apiKey = ""; // Not needed - backend handles auth
+        // Dynamic API URLs - works on localhost AND Vercel
+        const TEXT_API_URL = `/api/chat`;
+        const IMAGE_API_URL = `/api/image`;
 
         let state = {
             user: { name: 'Guest', plan: 'ultra', messages: 0 },
